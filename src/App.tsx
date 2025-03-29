@@ -22,7 +22,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -49,8 +49,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={!user ? <AuthForm /> : <Navigate to="/" replace />} />
-        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/" element={!user ? <AuthForm /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/tasks" element={<ProtectedRoute><TaskList /></ProtectedRoute>} />
         <Route path="/tasks/create" element={<ProtectedRoute><CreateTask /></ProtectedRoute>} />
         <Route path="/tasks/:taskId/submit" element={<ProtectedRoute><TaskSubmission /></ProtectedRoute>} />

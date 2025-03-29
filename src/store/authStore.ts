@@ -14,18 +14,44 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   loading: true,
   signIn: async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
+    try {
+      const { error, data } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+
+      // Ensure profile exists after sign in
+      if (data.user) {
+        await supabase
+          .from('profiles')
+          .upsert({ id: data.user.id }, { onConflict: 'id' });
+        
+        set({ user: data.user });
+      }
+    } catch (error) {
+      throw error;
+    }
   },
   signUp: async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    if (error) throw error;
+    try {
+      const { error, data } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) throw error;
+
+      // Create profile for new user
+      if (data.user) {
+        await supabase
+          .from('profiles')
+          .upsert({ id: data.user.id }, { onConflict: 'id' });
+        
+        set({ user: data.user });
+      }
+    } catch (error) {
+      throw error;
+    }
   },
   signOut: async () => {
     const { error } = await supabase.auth.signOut();
@@ -36,5 +62,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 // Initialize auth state
 supabase.auth.onAuthStateChange((event, session) => {
-  useAuthStore.setState({ user: session?.user || null, loading: false });
+  useAuthStore.setState({ 
+    user: session?.user || null, 
+    loading: false 
+  });
 });
