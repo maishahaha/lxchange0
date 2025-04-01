@@ -30,18 +30,14 @@
   animation: blob 7s infinite;
 }
 
-body {
-  @apply bg-gray-900 text-white;
-}
-
-/* Custom Scrollbar */
+/* Custom Scrollbar - Light Mode */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  @apply bg-gray-200;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -50,4 +46,17 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-blue-700;
+}
+
+/* Custom Scrollbar - Dark Mode */
+.dark ::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-blue-500;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  @apply bg-blue-400;
 }

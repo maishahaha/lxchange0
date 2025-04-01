@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { Mail, Lock, Loader, ArrowRight, CheckCircle, Shield, Zap } from 'lucide-react';
+import { useThemeStore } from '../store/themeStore';
+import { Mail, Lock, Loader, ArrowRight, CheckCircle, Shield, Zap, Sun, Moon } from 'lucide-react';
 
 export function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -8,6 +9,7 @@ export function AuthForm() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuthStore();
+  const { isDark, toggleTheme } = useThemeStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,57 +28,69 @@ export function AuthForm() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-blue-900 via-black to-purple-900 flex">
+    <div className={`min-h-screen w-full ${isDark ? 'bg-gradient-to-br from-gray-900 via-black to-blue-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'} flex`}>
       <div className="container mx-auto px-4 py-12 lg:py-24 flex items-center">
         <div className="w-full grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Hero Content */}
           <div className="space-y-8">
-            <h1 className="text-4xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 leading-tight">
-              Revolutionize Your Referral Game
-            </h1>
-            <p className="text-xl text-gray-300 leading-relaxed">
+            <div className="flex items-center justify-between">
+              <h1 className={`text-4xl lg:text-6xl font-bold ${isDark ? 'bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400' : 'text-blue-900'} leading-tight`}>
+                LXchange
+              </h1>
+              <button
+                onClick={toggleTheme}
+                className={`p-2 rounded-lg transition-colors ${
+                  isDark 
+                    ? 'text-gray-300 hover:bg-gray-700/50' 
+                    : 'text-gray-700 hover:bg-gray-200/50'
+                }`}
+              >
+                {isDark ? <Sun size={24} /> : <Moon size={24} />}
+              </button>
+            </div>
+            <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} leading-relaxed`}>
               Join the future of referral marketing. Connect, share, and earn in our cutting-edge ecosystem.
             </p>
             
             {/* Features Grid */}
             <div className="grid sm:grid-cols-2 gap-6 pt-8">
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-lg border border-white/10">
-                <div className="p-2 rounded-lg bg-blue-500/20">
-                  <Shield className="h-6 w-6 text-blue-400" />
+              <div className={`flex items-start gap-4 p-4 rounded-xl ${isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10' : 'bg-white/80 backdrop-blur-lg border border-blue-100'}`}>
+                <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-500/20' : 'bg-blue-100'}`}>
+                  <Shield className={`h-6 w-6 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Secure Platform</h3>
-                  <p className="text-gray-400 text-sm">Advanced encryption and verification systems</p>
+                  <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Secure Platform</h3>
+                  <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Advanced encryption and verification systems</p>
                 </div>
               </div>
               
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-lg border border-white/10">
-                <div className="p-2 rounded-lg bg-purple-500/20">
-                  <Zap className="h-6 w-6 text-purple-400" />
+              <div className={`flex items-start gap-4 p-4 rounded-xl ${isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10' : 'bg-white/80 backdrop-blur-lg border border-blue-100'}`}>
+                <div className={`p-2 rounded-lg ${isDark ? 'bg-purple-500/20' : 'bg-purple-100'}`}>
+                  <Zap className={`h-6 w-6 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Instant Rewards</h3>
-                  <p className="text-gray-400 text-sm">Get points immediately upon task completion</p>
+                  <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Instant Rewards</h3>
+                  <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Get points immediately upon task completion</p>
                 </div>
               </div>
               
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-lg border border-white/10">
-                <div className="p-2 rounded-lg bg-pink-500/20">
-                  <CheckCircle className="h-6 w-6 text-pink-400" />
+              <div className={`flex items-start gap-4 p-4 rounded-xl ${isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10' : 'bg-white/80 backdrop-blur-lg border border-blue-100'}`}>
+                <div className={`p-2 rounded-lg ${isDark ? 'bg-pink-500/20' : 'bg-pink-100'}`}>
+                  <CheckCircle className={`h-6 w-6 ${isDark ? 'text-pink-400' : 'text-pink-600'}`} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Verified Tasks</h3>
-                  <p className="text-gray-400 text-sm">All submissions are carefully reviewed</p>
+                  <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Verified Tasks</h3>
+                  <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>All submissions are carefully reviewed</p>
                 </div>
               </div>
               
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-lg border border-white/10">
-                <div className="p-2 rounded-lg bg-cyan-500/20">
-                  <ArrowRight className="h-6 w-6 text-cyan-400" />
+              <div className={`flex items-start gap-4 p-4 rounded-xl ${isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10' : 'bg-white/80 backdrop-blur-lg border border-blue-100'}`}>
+                <div className={`p-2 rounded-lg ${isDark ? 'bg-cyan-500/20' : 'bg-cyan-100'}`}>
+                  <ArrowRight className={`h-6 w-6 ${isDark ? 'text-cyan-400' : 'text-cyan-600'}`} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Easy to Use</h3>
-                  <p className="text-gray-400 text-sm">Intuitive interface for seamless experience</p>
+                  <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Easy to Use</h3>
+                  <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Intuitive interface for seamless experience</p>
                 </div>
               </div>
             </div>
@@ -89,37 +103,45 @@ export function AuthForm() {
             <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
             <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
 
-            <div className="backdrop-blur-lg bg-white/10 p-8 rounded-2xl shadow-2xl border border-white/20 relative z-10">
+            <div className={`${isDark ? 'backdrop-blur-lg bg-white/10 border border-white/20' : 'bg-white/80 backdrop-blur-lg border border-blue-100'} p-8 rounded-2xl shadow-2xl relative z-10`}>
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                <h2 className={`text-3xl font-bold ${isDark ? 'bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400' : 'text-blue-900'}`}>
                   {isLogin ? 'Welcome Back' : 'Join the Future'}
                 </h2>
-                <p className="mt-2 text-gray-300">
+                <p className={isDark ? 'mt-2 text-gray-300' : 'mt-2 text-gray-600'}>
                   {isLogin ? 'Access your account' : 'Create your account'}
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Mail className={`absolute left-3 top-3 h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
-                    className="w-full pl-10 pr-4 py-3 bg-black/30 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 transition-all"
+                    className={`w-full pl-10 pr-4 py-3 ${
+                      isDark 
+                        ? 'bg-black/30 border border-white/10 text-white placeholder-gray-400' 
+                        : 'bg-white/50 border border-gray-200 text-gray-900 placeholder-gray-500'
+                    } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
                     required
                   />
                 </div>
 
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Lock className={`absolute left-3 top-3 h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
-                    className="w-full pl-10 pr-4 py-3 bg-black/30 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 transition-all"
+                    className={`w-full pl-10 pr-4 py-3 ${
+                      isDark 
+                        ? 'bg-black/30 border border-white/10 text-white placeholder-gray-400' 
+                        : 'bg-white/50 border border-gray-200 text-gray-900 placeholder-gray-500'
+                    } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
                     required
                   />
                 </div>
@@ -140,7 +162,7 @@ export function AuthForm() {
               <div className="mt-6 text-center">
                 <button
                   onClick={() => setIsLogin(!isLogin)}
-                  className="text-sm text-gray-300 hover:text-white transition-colors"
+                  className={`text-sm ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}
                 >
                   {isLogin ? "Don't have an account? " : 'Already have an account? '}
                   <span className="font-semibold text-blue-400 hover:text-blue-300">
