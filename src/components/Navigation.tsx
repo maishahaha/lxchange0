@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
-import { Home, ListChecks, Plus, Wallet, Shield, LogOut, Sun, Moon } from 'lucide-react';
+import { Home, ListChecks, Plus, Wallet, Shield, LogOut, Sun, Moon, MessageSquare } from 'lucide-react';
 
 export function Navigation() {
   const location = useLocation();
@@ -35,6 +35,10 @@ export function Navigation() {
               <Link to="/tasks" className={linkClass('/tasks')}>
                 <ListChecks size={20} />
                 Tasks
+              </Link>
+              <Link to="/posts" className={linkClass('/posts')}>
+                <MessageSquare size={20} />
+                Posts
               </Link>
               <Link to="/tasks/create" className={linkClass('/tasks/create')}>
                 <Plus size={20} />
@@ -79,7 +83,7 @@ export function Navigation() {
       <div className={`md:hidden fixed bottom-0 left-0 right-0 ${
         isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
       } border-t`}>
-        <div className="grid grid-cols-5 gap-1 p-2">
+        <div className="grid grid-cols-6 gap-1 p-2">
           <Link to="/" className="flex flex-col items-center p-2 text-sm">
             <Home size={20} className={`${
               isActive('/') 
@@ -95,6 +99,14 @@ export function Navigation() {
                 : isDark ? 'text-gray-400' : 'text-gray-600'
             }`} />
             <span className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Tasks</span>
+          </Link>
+          <Link to="/posts" className="flex flex-col items-center p-2 text-sm">
+            <MessageSquare size={20} className={`${
+              isActive('/posts') 
+                ? 'text-blue-600' 
+                : isDark ? 'text-gray-400' : 'text-gray-600'
+            }`} />
+            <span className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Posts</span>
           </Link>
           <Link to="/tasks/create" className="flex flex-col items-center p-2 text-sm">
             <Plus size={20} className={`${

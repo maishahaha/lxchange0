@@ -10,6 +10,8 @@ import { CreateTask } from './components/CreateTask';
 import { TaskSubmission } from './components/TaskSubmission';
 import { WalletDashboard } from './components/WalletDashboard';
 import { ModeratorDashboard } from './components/ModeratorDashboard';
+import { PostList } from './components/PostList';
+import { CreatePost } from './components/CreatePost';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthStore();
@@ -60,10 +62,12 @@ function App() {
           <Route path="/tasks/:taskId/submit" element={<ProtectedRoute><TaskSubmission /></ProtectedRoute>} />
           <Route path="/wallet" element={<ProtectedRoute><WalletDashboard /></ProtectedRoute>} />
           <Route path="/moderate" element={<ProtectedRoute><ModeratorDashboard /></ProtectedRoute>} />
+          <Route path="/posts" element={<ProtectedRoute><PostList /></ProtectedRoute>} />
+          <Route path="/posts/create" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
         </Routes>
       </div>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;
