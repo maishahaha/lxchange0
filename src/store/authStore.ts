@@ -25,16 +25,24 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (data.user) {
         const { error: profileError } = await supabase
           .from('profiles')
-          .insert({ 
-            id: data.user.id,
-            username: data.user.email?.split('@')[0], // Set a default username
-            points: 0
-          })
           .select()
+          .eq('id', data.user.id)
           .single();
 
-        // If insert fails due to conflict (profile exists), ignore the error
-        if (profileError && !profileError.message.includes('duplicate key')) {
+        if (profileError && profileError.code === 'PGRST116') {
+          // Profile doesn't exist, create it
+          const { error: createError } = await supabase
+            .from('profiles')
+            .insert({ 
+              id: data.user.id,
+              username: data.user.email?.split('@')[0],
+              points: 0
+            })
+            .select()
+            .single();
+
+          if (createError) throw createError;
+        } else if (profileError) {
           throw profileError;
         }
         
@@ -58,13 +66,15 @@ export const useAuthStore = create<AuthState>((set) => ({
           .from('profiles')
           .insert({ 
             id: data.user.id,
-            username: email.split('@')[0], // Set a default username
+            username: email.split('@')[0],
             points: 0
           })
           .select()
           .single();
 
-        if (profileError) throw profileError;
+        if (profileError && !profileError.message.includes('duplicate key')) {
+          throw profileError;
+        }
         
         set({ user: data.user });
       }

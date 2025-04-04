@@ -34,17 +34,32 @@ export function Dashboard() {
       if (!user?.id) return;
 
       try {
-        // Ensure profile exists before fetching data
-        await supabase
+        // Get profile data first
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
-          .upsert({ id: user.id }, { onConflict: 'id' });
+          .select('points')
+          .eq('id', user.id)
+          .single();
 
-        const [profileData, tasksData, submissionsData, transactionsData] = await Promise.all([
-          supabase
+        if (profileError && profileError.code === 'PGRST116') {
+          // Profile doesn't exist, create it
+          const { data: newProfile, error: createError } = await supabase
             .from('profiles')
-            .select('points')
-            .eq('id', user.id)
-            .maybeSingle(),
+            .insert({ 
+              id: user.id,
+              username: user.email?.split('@')[0],
+              points: 0 
+            })
+            .select()
+            .single();
+
+          if (createError) throw createError;
+          profileData = newProfile;
+        } else if (profileError) {
+          throw profileError;
+        }
+
+        const [tasksData, submissionsData, transactionsData] = await Promise.all([
           supabase
             .from('tasks')
             .select('id')
@@ -62,7 +77,7 @@ export function Dashboard() {
         ]);
 
         setStats({
-          totalPoints: profileData.data?.points || 0,
+          totalPoints: profileData?.points || 0,
           tasksCreated: tasksData.data?.length || 0,
           tasksCompleted: submissionsData.data?.filter(s => s.status === 'approved').length || 0,
           pendingSubmissions: submissionsData.data?.filter(s => s.status === 'pending').length || 0,
