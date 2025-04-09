@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import { supabase } from '../lib/supabase';
@@ -16,6 +16,7 @@ interface Notification {
 
 export function Navigation() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, signOut } = useAuthStore();
   const { isDark, toggleTheme } = useThemeStore();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -87,6 +88,10 @@ export function Navigation() {
     setUnreadCount(prev => Math.max(0, prev - 1));
   };
 
+  const handleTasksClick = () => {
+    navigate('/tasks?view=created');
+  };
+
   return (
     <nav className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-lg relative z-50`}>
       <div className="container mx-auto px-4">
@@ -112,13 +117,22 @@ export function Navigation() {
                 <Plus size={20} />
                 Create Task
               </Link>
+              <button
+                onClick={handleTasksClick}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                  location.pathname === '/tasks' && location.search.includes('view=created')
+                    ? 'bg-blue-600 text-white'
+                    : isDark
+                    ? 'text-gray-300 hover:bg-gray-700'
+                    : 'text-gray-700 hover:bg-blue-50'
+                }`}
+              >
+                <Shield size={20} />
+                Tasks Created
+              </button>
               <Link to="/wallet" className={linkClass('/wallet')}>
                 <Wallet size={20} />
                 Wallet
-              </Link>
-              <Link to="/moderate" className={linkClass('/moderate')}>
-                <Shield size={20} />
-                Moderate
               </Link>
             </div>
           </div>
@@ -249,6 +263,17 @@ export function Navigation() {
             }`} />
             <span className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Create</span>
           </Link>
+          <button
+            onClick={handleTasksClick}
+            className="flex flex-col items-center p-2 text-sm"
+          >
+            <Shield size={20} className={`${
+              location.pathname === '/tasks' && location.search.includes('view=created')
+                ? 'text-blue-600'
+                : isDark ? 'text-gray-400' : 'text-gray-600'
+            }`} />
+            <span className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Created</span>
+          </button>
           <Link to="/wallet" className="flex flex-col items-center p-2 text-sm">
             <Wallet size={20} className={`${
               isActive('/wallet') 
@@ -256,14 +281,6 @@ export function Navigation() {
                 : isDark ? 'text-gray-400' : 'text-gray-600'
             }`} />
             <span className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Wallet</span>
-          </Link>
-          <Link to="/moderate" className="flex flex-col items-center p-2 text-sm">
-            <Shield size={20} className={`${
-              isActive('/moderate') 
-                ? 'text-blue-600' 
-                : isDark ? 'text-gray-400' : 'text-gray-600'
-            }`} />
-            <span className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Moderate</span>
           </Link>
         </div>
       </div>

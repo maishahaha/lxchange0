@@ -35,7 +35,7 @@ export function Dashboard() {
 
       try {
         // Get profile data first
-        const { data: profileData, error: profileError } = await supabase
+        let { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('points')
           .eq('id', user.id)
